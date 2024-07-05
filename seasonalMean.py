@@ -21,9 +21,13 @@ def get_clim(input_fname, rec, varnum, nt):
     return vint
 
 
-def out_clim(input_fname, output_fname, varname):
+def out_clim(input_fname, output_fname, dtype, varname):
 
-    ny = 145
+    if (dtype == 'VINT'):
+        ny = 145
+    elif (dtype == 'GMEAN'):
+        ny = 1
+
     recl = 4*ny
     vint_input = filein(input_fname, [ny], recl, 1, 4, 'LITTLE', 1)
 
@@ -43,6 +47,7 @@ def out_clim(input_fname, output_fname, varname):
         while (month == m):
             if (month == 2 and int(datetime.datetime.strftime(date, '%d')) == 29):
                 date = date + datetime.timedelta(hours = hstep)
+                month = int(datetime.datetime.strftime(date, '%m'))
                 continue
            
             vint[:] = vint[:] + vint_input.fread()
@@ -52,7 +57,11 @@ def out_clim(input_fname, output_fname, varname):
             nhrs = nhrs + 1
 
         vint[:] = vint[:] / np.float64(nhrs)
-        gmean = vint2gmean(vint, 1.25, True, -90., 90.)
+
+        if (dtype == 'VINT'):
+            gmean = vint2gmean(vint, 1.25, True, -90., 90.)
+        elif (dtype == 'GMEAN'):
+            gmean = vint[0]
 
         f.write('MONTH : {:02d}, '.format(m))
         f.write('HOUR-NUM : {}, '.format(nhrs))
@@ -67,7 +76,8 @@ def out_clim(input_fname, output_fname, varname):
 
 
 varname = 'qe'
-input_fname = '/mnt/hail8/kosei/mim/energetics/hourly_clim/output/JRA55_6hourly_clim_1979_1980_{}_VINT.dat'.format(varname)
-output_fname = './result/JRA55_1979_1980_{}_clim.txt'.format(varname)
-out_clim(input_fname, output_fname, varname)
+dtype = 'VINT'
+input_fname = '/mnt/jet11/kosei/mim/energetics/hourly_clim/output/JRA3Q_1980_2023_ALL_{}_{}.dat'.format(dtype, varname)
+output_fname = './result/JRA3Q_1980_2023_{}_clim.txt'.format(varname)
+out_clim(input_fname, output_fname, dtype, varname)
 
