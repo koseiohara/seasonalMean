@@ -33,10 +33,10 @@ def seasonal():
     JJA = (sum[6] + sum[7]  + sum[8] ) / (days[6] + days[7]  + days[8] )
     SON = (sum[9] + sum[10] + sum[11]) / (days[9] + days[10] + days[11])
 
-    print('DJF : {:.4e}'.format(DJF))
-    print('MAM : {:.4e}'.format(MAM))
-    print('JJA : {:.4e}'.format(JJA))
-    print('SON : {:.4e}'.format(SON))
+    print('DJF : {:.5e}'.format(DJF))
+    print('MAM : {:.5e}'.format(MAM))
+    print('JJA : {:.5e}'.format(JJA))
+    print('SON : {:.5e}'.format(SON))
 
 
 seasonal()
